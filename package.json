@@ -7,6 +7,9 @@
   "main": "dist/lib/index.js",
   "module": "dist/lib/index.js",
   "typings": "dist/types/index.d.ts",
+  "bin": {
+    "moke-compress": "bin/moke-compress"
+  },
   "files": [
     "dist"
   ],
@@ -17,7 +20,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=10.0.0"
   },
   "scripts": {
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
@@ -88,6 +91,7 @@
     "@commitlint/config-conventional": "^7.1.2",
     "@types/inquirer": "^6.5.0",
     "@types/jest": "^23.3.2",
+    "@types/mkdirp": "^0.5.2",
     "@types/node": "^10.11.0",
     "@types/shelljs": "^0.8.6",
     "chalk": "^3.0.0",
@@ -104,6 +108,7 @@
     "lint-staged": "^8.0.0",
     "load-json-file": "^6.2.0",
     "lodash.camelcase": "^4.3.0",
+    "mkdirp": "^0.5.1",
     "prettier": "^1.14.3",
     "prompt": "^1.0.0",
     "replace-in-file": "^3.4.2",

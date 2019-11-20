@@ -7,8 +7,9 @@
 import * as tinify from 'tinify'
 import * as chalk from 'chalk'
 import { promises } from 'fs'
-import { join } from 'path'
-import { existDir } from './utils'
+import { resolve } from 'path'
+import { mkdirOutput } from './utils'
+import config from '../config/config'
 
 /**
  * tinify 剩余次数
@@ -42,29 +43,24 @@ function validateTinify(apiKey: string) {
 async function compressTinify(file: string, outPath: string = '') {
 
   try {
+    console.log(chalk.blue(`开始压缩图片 ${file} compress...`))
+
     const sourceData = await promises.readFile(file)
 
     const source = await tinify.fromBuffer(sourceData)
 
     const buffer = await source.toBuffer()
 
-    const name = existDir(outPath, 'compress')
+    // 返回压缩图片的绝对路径
+    const outFile = resolve(outPath, config.outDir, file)
 
-    const outFile = join(outPath, name, file)
+    await mkdirOutput(outFile)
 
-    try {
-      await promises.writeFile(outFile, buffer)
-    } catch (e) {
-      if (e.code === 'ENOENT') {
-        await promises.mkdir(join(outPath, name))
-        await promises.writeFile(outFile, buffer)
-      }
-    }
+    await promises.writeFile(outFile, buffer)
 
-
-    console.log(chalk.green(`图片压缩成功${file}`))
+    console.log(chalk.green(`图片压缩成功: ${file}`))
   } catch (e) {
-    console.log(chalk.red(`图片压缩失败${file}`))
+    console.log(chalk.red(`图片压缩失败: ${file}`))
 
     throw e
   }

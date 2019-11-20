@@ -15,11 +15,17 @@ const { readdir } = promises
 async function findImages(path: string) {
   try {
     const isDir = await isDirectory(path)
+
     if (!isDir) {
       return
     }
 
-    const files = await readdir(path)
+    let files = await readdir(path)
+
+    files = files.filter((item: string) => {
+      if (/^\./.test(item)) return false
+      return 'compress' !== item;
+    })
 
     for (let file of files) {
       const fullPath = join(path, file)
@@ -60,9 +66,12 @@ async function compressImage(file: string) {
 /**
  * 启动压缩
  * @param key
- * @param path {string}
+ * @param path {string} 默认 './' 当前目录
  */
-async function start(key: string, path: string) {
+async function start(key: string, path: string = '.') {
+
+  path = join(path)
+
   try {
     const isValid = await validateTinify(key)
     if (!isValid) return

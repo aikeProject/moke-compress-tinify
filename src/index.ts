@@ -20,6 +20,7 @@ version(pkg.version, '-v, --version', '版本号信息')
 command('clear')
   .alias('rm')
   .option('-t, --tinifyKeys', '清空设置的api key')
+  .description('清空设置的key')
   .action(async (options) => {
     const { tinifyKeys } = options
 
@@ -54,18 +55,11 @@ command('compress')
       const answers = await prompt(chose)
 
       // 启动压缩
-      start(answers.tinifyKey as string, '')
+      start(answers.tinifyKey as string)
 
     } else {
       await setKeyJson([...(configKeys as [] || []), key])
     }
-
-
-    // const keysJson = await setKeyJson()
-    // console.log('options key', key, path, out)
-    // console.log('tinifyKey', answers.tinifyKey)
-    // console.log('configKeys', configKeys[0])
-    // console.log('keysJson', keysJson)
   })
 
 command('*').description('没有此命令').action(() => help())

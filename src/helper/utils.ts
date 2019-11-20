@@ -5,7 +5,8 @@
  */
 
 import { promises, accessSync } from 'fs'
-import { join } from 'path'
+import { join, parse } from 'path'
+import * as mkdirp from 'mkdirp'
 
 const { stat } = promises
 
@@ -77,9 +78,27 @@ const reg = {
   isTinyPic: /\.(jpg|jpeg|png)$/
 }
 
+/**
+ * 创建目录
+ * @param file
+ */
+function mkdirOutput(file: string) {
+  const { dir } = parse(file)
+  return new Promise((resolve, reject) => {
+    mkdirp(dir, function(err) {
+      if (err) {
+        reject(err)
+        return
+      }
+      resolve(true)
+    })
+  })
+}
+
 export {
   isDirectory,
   isFile,
   reg,
-  existDir
+  existDir,
+  mkdirOutput
 }
