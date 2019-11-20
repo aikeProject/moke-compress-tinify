@@ -10,12 +10,15 @@ import { validateTinify, residue, compressTinify } from './helper/tinify'
 import { isFile, isDirectory, reg } from './helper/utils'
 import * as chalk from 'chalk'
 import { InterfaceConfig } from './type'
-import defaultConfig from './config/config'
+import defaultConfig, { defaultOutDir } from './config/config'
 
 const { readdir } = promises
 
 class Core {
   config: InterfaceConfig
+  fileList: string[] = []
+  errorFile: string[] = []
+  sum: number = 0
 
   constructor(config: InterfaceConfig) {
 
@@ -26,6 +29,7 @@ class Core {
   }
 
   async findImages(path: string) {
+    const { sync } = this.config
     try {
       const isDir = await isDirectory(path)
 
@@ -37,12 +41,16 @@ class Core {
 
       files = files.filter((item: string) => {
         if (/^\./.test(item)) return false
-        return 'compress' !== item
+        return defaultOutDir !== item
       })
 
       for (let file of files) {
         const fullPath = join(path, file)
-        await this.compressImage(fullPath)
+        if (sync) {
+          this.compressImage(fullPath)
+        } else {
+          await this.compressImage(fullPath)
+        }
       }
     } catch (error) {
       console.log(error)
@@ -56,7 +64,7 @@ class Core {
     const isDir = await isDirectory(file)
 
     if (isDir) {
-      this.findImages(file)
+      await this.findImages(file)
     }
 
     const isFileFlag = await isFile(file)
@@ -64,13 +72,23 @@ class Core {
     if (isFileFlag) {
       if (reg.isTinyPic.test(file)) {
         const left = residue()
-        // 剩余数判断，解决同步时剩余数不足导致的全部图片压缩失败问题
+
         if (left <= 0) {
           console.log(chalk.red(`当前key的可用剩余数不足！${file} 压缩失败！`))
           return
         }
 
-        await compressTinify(file, out, path)
+        this.fileList.push(file)
+
+        const errorFile = await compressTinify(file, out, path)
+        if (errorFile) this.errorFile.push(errorFile)
+
+        ++this.sum
+
+        if (this.sum === this.fileList.length) {
+          console.log('fileList', this.fileList)
+          console.log('errorFile', this.errorFile)
+        }
 
       } else {
         console.log(chalk.red(`不支持的文件格式 ${file}`))
@@ -91,6 +109,8 @@ class Core {
       if (!isValid) return
 
       await this.findImages(path)
+
+      console.log('done')
 
     } catch (e) {
       // do something

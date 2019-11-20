@@ -63,8 +63,7 @@ async function compressTinify(file: string, outPath: string = '', defaultPath: s
     console.log(chalk.green(`图片压缩成功: ${relativeFile}`))
   } catch (e) {
     console.log(chalk.red(`图片压缩失败: ${file}`))
-
-    throw e
+    return file
   }
 
 }

@@ -6,6 +6,8 @@
 import * as path from 'path'
 import { InterfaceConfig } from '../type'
 
+export const defaultOutDir = 'moke-compress'
+
 const config: InterfaceConfig = {
   key: '',
   // 默认开启异步压缩

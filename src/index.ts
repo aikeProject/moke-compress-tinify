@@ -45,7 +45,7 @@ command('compress')
   .option('-k, --key [key]', '设置key，查看相关 https://tinify.cn/developers/reference')
   .option('-p, --path [path]', '输入压缩图片所在目录')
   .option('-o, --out [path]', '输入输出压缩图片目录')
-  .option('-s, --sync', '是否异步压缩')
+  .option('-s, --sync', '是否异步压缩，默认异步压缩')
   .description('压缩图片')
   .action(async (options) => {
     const { key, path, out, sync } = options
