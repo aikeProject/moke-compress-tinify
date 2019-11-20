@@ -4,18 +4,26 @@
  * @Description: tinify 压缩工具
  */
 
-import { version, parse, help, command, description } from 'commander'
+import { version, parse, help, command, description, option } from 'commander'
 import { prompt } from 'inquirer'
 import * as chalk from 'chalk'
-import * as pkg from '../package.json'
+import * as loadJsonFile from 'load-json-file'
 import * as configKeys from './config/keys.json'
 import { choseKey } from './helper/questions'
 import { setKeyJson, readKeysJson } from './helper/keysJson'
-import { start } from './core'
+import Core from './core'
+import { resolve } from 'path'
+import { InterfaceConfig } from './type'
+import defaultConfig from './config/config'
 
 description('使用tinify压缩图片')
 
-version(pkg.version, '-v, --version', '版本号信息')
+try {
+  const pkg = loadJsonFile.sync<{ version: string }>(resolve(__dirname, '../../package.json'))
+  version(pkg.version, '-v, --version', '版本号信息')
+} catch (e) {
+  console.log(chalk.red(e))
+}
 
 command('clear')
   .alias('rm')
@@ -40,8 +48,8 @@ command('compress')
   .option('-s, --sync', '是否异步压缩')
   .description('压缩图片')
   .action(async (options) => {
-    const { key, path, out, args } = options
-    const config = {}
+    const { key, path, out, sync } = options
+    const config: InterfaceConfig = { key: '', path, out, sync }
 
     if (!key || typeof key !== 'string') {
       const keys = await readKeysJson()
@@ -53,16 +61,16 @@ command('compress')
 
       const chose = await choseKey()
       const answers = await prompt(chose)
-
+      config.key = answers.tinifyKey as string
       // 启动压缩
-      start(answers.tinifyKey as string)
+      new Core(config).start()
 
     } else {
       await setKeyJson([...(configKeys as [] || []), key])
     }
   })
 
-command('*').description('没有此命令').action(() => help())
+command('*').description('...').action(() => help())
 
 parse(process.argv)
 

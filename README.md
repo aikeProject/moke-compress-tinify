@@ -57,3 +57,6 @@ npm i tinify -D
 - `process.cwd()` 获取 Node.js 进程的当前工作目录
 - `process.execPath` 返回启动 Node.js 进程的可执行文件的绝对路径
 - `__dirname` 当前模块的目录名 [__dirname](http://nodejs.cn/api/modules.html#modules_dirname)
+- `path.resolve(path, path...)` 返回当前工作目录的绝对路径
+- `path.join(path, path...)` 使用平台特定的分隔符作为定界符将所有给定的 path 片段连接在一起，然后规范化生成的路径
+- `path.parse(path)` 方法返回一个对象，包含标识path的信息

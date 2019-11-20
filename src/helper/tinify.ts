@@ -7,9 +7,8 @@
 import * as tinify from 'tinify'
 import * as chalk from 'chalk'
 import { promises } from 'fs'
-import { resolve } from 'path'
+import { relative, resolve } from 'path'
 import { mkdirOutput } from './utils'
-import config from '../config/config'
 
 /**
  * tinify 剩余次数
@@ -40,7 +39,7 @@ function validateTinify(apiKey: string) {
   })
 }
 
-async function compressTinify(file: string, outPath: string = '') {
+async function compressTinify(file: string, outPath: string = '', defaultPath: string) {
 
   try {
     console.log(chalk.blue(`开始压缩图片 ${file} compress...`))
@@ -51,14 +50,17 @@ async function compressTinify(file: string, outPath: string = '') {
 
     const buffer = await source.toBuffer()
 
+    // 获取图片相对路径
+    const relativeFile = relative(defaultPath, file)
+
     // 返回压缩图片的绝对路径
-    const outFile = resolve(outPath, config.outDir, file)
+    const outFile = resolve(outPath, relativeFile)
 
     await mkdirOutput(outFile)
 
     await promises.writeFile(outFile, buffer)
 
-    console.log(chalk.green(`图片压缩成功: ${file}`))
+    console.log(chalk.green(`图片压缩成功: ${relativeFile}`))
   } catch (e) {
     console.log(chalk.red(`图片压缩失败: ${file}`))
 
