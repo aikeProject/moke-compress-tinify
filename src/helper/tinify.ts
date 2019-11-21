@@ -28,12 +28,16 @@ function validateTinify(apiKey: string) {
   return tinify.validate().then(() => {
     const count = residue()
 
-    console.log(chalk.green(`剩余可用次数${count}`))
+    console.log('')
+    console.log(chalk.green(`当前tinify api key 剩余可用次数${chalk.yellow(count)}`))
+    console.log('')
 
     return Promise.resolve(true)
   }, () => {
 
+    console.log('')
     console.log(chalk.red('当前 api key 错误或者当月500次用尽，请重新设置api key'))
+    console.log('')
 
     return Promise.reject(false)
   })
@@ -51,7 +55,7 @@ async function compressTinify(file: string, outPath: string = '', defaultPath: s
     const buffer = await source.toBuffer()
 
     // 获取图片相对路径
-    const relativeFile = relative(defaultPath, file)
+    const relativeFile = file.split('/').pop()!
 
     // 返回压缩图片的绝对路径
     const outFile = resolve(outPath, relativeFile)
@@ -61,6 +65,7 @@ async function compressTinify(file: string, outPath: string = '', defaultPath: s
     await promises.writeFile(outFile, buffer)
 
     console.log(chalk.green(`图片压缩成功: ${relativeFile}`))
+    console.log(chalk.green(`图片保存到: ${outFile}`))
   } catch (e) {
     console.log(chalk.red(`图片压缩失败: ${file}`))
     return file

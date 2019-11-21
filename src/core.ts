@@ -19,6 +19,7 @@ class Core {
   fileList: string[] = []
   errorFile: string[] = []
   sum: number = 0
+  startTime: number = new Date().getTime()
 
   constructor(config: InterfaceConfig) {
 
@@ -28,6 +29,10 @@ class Core {
     this.config = Object.assign({}, defaultConfig, config, { path, out })
   }
 
+  /**
+   * 查找path下的可压缩文件
+   * @param path
+   */
   async findImages(path: string) {
     const { sync } = this.config
     try {
@@ -35,6 +40,7 @@ class Core {
 
       if (!isDir) {
         await this.compressImage(path)
+        return
       }
 
       let files = await readdir(path)
@@ -57,6 +63,10 @@ class Core {
     }
   }
 
+  /**
+   * 压缩传入的file文件
+   * @param file
+   */
   async compressImage(file: string) {
 
     const { out, path } = this.config
@@ -85,10 +95,7 @@ class Core {
 
         ++this.sum
 
-        if (this.sum === this.fileList.length) {
-          console.log('fileList', this.fileList)
-          console.log('errorFile', this.errorFile)
-        }
+        this.done('sync')
 
       } else {
         console.log(chalk.red(`不支持的文件格式 ${file}`))
@@ -98,7 +105,6 @@ class Core {
 
   /**
    * 启动压缩
-   * @param config
    */
   async start() {
 
@@ -110,13 +116,51 @@ class Core {
 
       await this.findImages(path)
 
-      console.log('done')
+      this.done('t')
 
     } catch (e) {
       // do something
     }
 
   }
+
+  /**
+   * 完成时输出提示
+   * @param type sync 异步压缩 t 同步压缩
+   */
+  done(type: 'sync' | 't') {
+
+    const errorCount = this.errorFile.length
+    const successCount = this.sum - errorCount
+    let time = (new Date().getTime() - this.startTime) / 1000
+    time = parseFloat(time.toFixed(2))
+    let show = false
+
+
+    if (!this.config.sync && type === 't') show = true
+
+    if (this.config.sync && this.sum === this.fileList.length && type === 'sync') show = true
+
+    if (show) {
+
+      let done = `${chalk.blue('总数:')} ${chalk.blue(this.sum)} `
+      done += `${chalk.green('成功:')} ${chalk.green(successCount)} `
+      done += `${chalk.red('失败:')} ${chalk.red(errorCount)} `
+      done += `${chalk.blue('耗时:')} ${time}秒 `
+
+      console.log('')
+      console.log(done)
+
+      if (errorCount) {
+        const errorStr = this.errorFile.join('\n')
+
+        console.log('')
+        console.log(chalk.blue('失败文件: '))
+        console.log(chalk.red(errorStr))
+      }
+    }
+  }
+
 }
 
 export default Core
