@@ -32,6 +32,7 @@ describe('测试一些node api 用法', () => {
     console.log(resolve())
     console.log(resolve("compress"))
     console.log(relative('/Users/chengyu/Desktop/images', '/Users/chengyu/Desktop/images/20141020144524_fXY3C.jpeg'))
+    console.log(resolve('moke-compress'))
   })
 
 })

@@ -15,7 +15,7 @@ const config: InterfaceConfig = {
   // 图片压缩默认输入路径 resolve 默认返回当前路径 绝对路径
   path: process.cwd(),
   // 图片压缩输出目录绝对路径 当前路径 + compress
-  out: path.resolve('moke-compress')
+  out: path.resolve(defaultOutDir)
 }
 
 export default config

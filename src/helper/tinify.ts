@@ -55,7 +55,9 @@ async function compressTinify(file: string, outPath: string = '', defaultPath: s
     const buffer = await source.toBuffer()
 
     // 获取图片相对路径
-    const relativeFile = file.split('/').pop()!
+    // const fileLast = file.split('/').pop()!
+    // const relativeFile = relative(defaultPath, fileLast)
+    const relativeFile = relative(defaultPath, file)
 
     // 返回压缩图片的绝对路径
     const outFile = resolve(outPath, relativeFile)
