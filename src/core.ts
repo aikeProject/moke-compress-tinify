@@ -26,6 +26,10 @@ class Core {
     let path = config.path ? resolve(config.path) : defaultConfig.path
     let out = config.out ? resolve(config.out) : defaultConfig.out
 
+    if (config.path && !config.out) {
+      out = resolve(path, defaultOutDir)
+    }
+
     this.config = Object.assign({}, defaultConfig, config, { path, out })
   }
 
@@ -52,7 +56,7 @@ class Core {
 
       for (let file of files) {
         const fullPath = join(path, file)
-        if (sync) {
+        if (!sync) {
           this.compressImage(fullPath)
         } else {
           await this.compressImage(fullPath)
@@ -137,9 +141,9 @@ class Core {
     let show = false
 
 
-    if (!this.config.sync && type === 't') show = true
+    if (this.config.sync && type === 't') show = true
 
-    if (this.config.sync && this.sum === this.fileList.length && type === 'sync') show = true
+    if (!this.config.sync && this.sum === this.fileList.length && type === 'sync') show = true
 
     if (show) {
 
