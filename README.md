@@ -1,4 +1,10 @@
-## `noke-compress-tinify`的使用
+# `moke-compress-tinify`
+
+- description
+
+使用[tinify api key](https://tinify.cn/developers/reference)提供的api进行图片压缩的简单cli工具
+
+## `moke-compress-tinify`的使用
 
 - download
 
@@ -6,7 +12,7 @@
 npm i moke-compress -g
 ```
 
-- 申请qpi key[tinify api key](https://tinify.cn/developers/reference，设置api key，如下：
+- 申请qpi key[tinify api key](https://tinify.cn/developers/reference)，设置api key，如下：
 
 ```
 moke-compress c -k [api key]
