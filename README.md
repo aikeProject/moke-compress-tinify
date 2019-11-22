@@ -32,6 +32,8 @@ moke-compress c -o [输出位置路径]
 
 #### 项目配置
 
+- 整个项目配置使用`typescript-library-starter`，详细介绍请[查看](https://github.com/alexjoverm/typescript-library-starter)
+
 - `tsconfig.json` 
 
 [tsconfig-zh](https://www.tslang.cn/docs/handbook/tsconfig-json.html)
