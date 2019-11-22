@@ -1,3 +1,29 @@
+## `noke-compress-tinify`的使用
+
+- download
+
+```
+npm i moke-compress -g
+```
+
+- 申请qpi key[tinify api key](https://tinify.cn/developers/reference，设置api key，如下：
+
+```
+moke-compress c -k [api key]
+```
+
+- 压缩当前目录下图片，格式 (.jpg,.png)，会输出到当前目录的`moke-compress`目录下
+
+```
+moke-compress c
+```
+
+- 指定输出目录
+
+```
+moke-compress c -o [输出位置路径]
+```
+
 #### 项目配置
 
 - `tsconfig.json` 
@@ -60,3 +86,13 @@ npm i tinify -D
 - `path.resolve(path, path...)` 返回当前工作目录的绝对路径
 - `path.join(path, path...)` 使用平台特定的分隔符作为定界符将所有给定的 path 片段连接在一起，然后规范化生成的路径
 - `path.parse(path)` 方法返回一个对象，包含标识path的信息
+
+
+#### jest 测试相关
+
+- 主要测试了 `core.ts` `index.ts` 下的内容
+- 关于命令行输入的测试，与命令行进行交互，
+可查看这片文章[Node.js CLI](https://medium.com/@zorrodg/integration-tests-on-node-js-cli-part-2-testing-interaction-user-input-6f345d4b713a)
+其中，可用他编写的[cmd.js](https://gist.github.com/zorrodg/c349cf54a3f6d0a9ba62e0f4066f31cb)辅助进行命令行的输出，
+主要涉及的知识是`child_process.spawn`[node 子进程](http://nodejs.cn/api/child_process.html#child_process_child_process_spawn_command_args_options)
+
