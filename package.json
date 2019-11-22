@@ -1,6 +1,6 @@
 {
   "name": "moke-images-tinify",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "使用tinify提供的api进行图片压缩的简单cli工具",
   "keywords": [
     "node",
