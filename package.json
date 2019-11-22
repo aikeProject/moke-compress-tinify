@@ -4,9 +4,9 @@
   "description": "",
   "keywords": [],
   "type": "module",
-  "main": "dist/lib/index.js",
-  "module": "dist/lib/index.js",
-  "typings": "dist/types/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "bin": {
     "moke-compress": "bin/moke-compress"
   },

@@ -51,9 +51,8 @@ command('compress')
 
     if (!key || typeof key !== 'string') {
       const keys = await readKeysJson()
-      console.log('-----', keys)
       if (!(keys || []).length) {
-        console.log(chalk.red('请设置压缩图片所需要的api key'))
+        console.log(chalk.red('请设置压缩图片所需要的api key: moke-compress c -k <key>'))
         return
       }
 
