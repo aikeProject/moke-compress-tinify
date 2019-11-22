@@ -168,6 +168,22 @@ describe('core 测试', () => {
 
     }, MAX_TIME)
 
+    it('输入文件', async (done) => {
+      const config = {
+        key: defaultKey,
+        path: 'a.jpg',
+        out: outPath,
+        sync: true
+      }
+
+      const core = new Core(config)
+      await core.start()
+
+      const files = readdirSync(outPath)
+      expect(files.length).toEqual(1)
+      done()
+
+    }, MAX_TIME)
   })
 
 })

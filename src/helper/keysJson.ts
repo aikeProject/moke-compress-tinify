@@ -7,6 +7,7 @@
 import * as writeJsonFile from 'write-json-file'
 import * as loadJsonFile from 'load-json-file'
 import { resolve } from 'path'
+import { writeFileSync } from 'fs'
 
 const path = resolve(__dirname, '..', 'config/keys.json')
 
@@ -14,8 +15,16 @@ function setKeyJson(data: string[] = []) {
   return writeJsonFile(path, data || [])
 }
 
-function readKeysJson() {
-  return loadJsonFile<string[]>(path)
+async function readKeysJson() {
+
+  try {
+    return await loadJsonFile<string[]>(path)
+  } catch (e) {
+    writeFileSync(path, '[]')
+
+    return []
+  }
+
 }
 
 export {

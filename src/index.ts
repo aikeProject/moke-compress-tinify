@@ -4,22 +4,20 @@
  * @Description: tinify 压缩工具
  */
 
-import { version, parse, help, command, description, option } from 'commander'
+import { version, parse, help, command, description } from 'commander'
 import { prompt } from 'inquirer'
 import * as chalk from 'chalk'
 import * as loadJsonFile from 'load-json-file'
-import * as configKeys from './config/keys.json'
 import { choseKey } from './helper/questions'
 import { setKeyJson, readKeysJson } from './helper/keysJson'
 import Core from './core'
 import { resolve } from 'path'
 import { InterfaceConfig } from './type'
-import defaultConfig from './config/config'
 
 description('使用tinify压缩图片')
 
 try {
-  const pkg = loadJsonFile.sync<{ version: string }>(resolve(__dirname, '../../package.json'))
+  const pkg = loadJsonFile.sync<{ version: string }>(resolve(__dirname, '../package.json'))
   version(pkg.version, '-v, --version', '版本号信息')
 } catch (e) {
   console.log(chalk.red(e))
@@ -53,7 +51,7 @@ command('compress')
 
     if (!key || typeof key !== 'string') {
       const keys = await readKeysJson()
-
+      console.log('-----', keys)
       if (!(keys || []).length) {
         console.log(chalk.red('请设置压缩图片所需要的api key'))
         return
@@ -66,7 +64,14 @@ command('compress')
       new Core(config).start()
 
     } else {
-      await setKeyJson([...(configKeys as [] || []), key])
+
+      const configKeys = await readKeysJson()
+      await setKeyJson([...(configKeys || []), key])
+      const keys = await readKeysJson() as string[]
+
+      (keys || []).map((item: string) => {
+        console.log(chalk.green(item))
+      })
     }
   })
 
@@ -77,6 +82,3 @@ parse(process.argv)
 if (process.argv.length < 3) {
   help()
 }
-
-// console.log(opts())
-// console.log(args)

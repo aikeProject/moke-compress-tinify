@@ -8,7 +8,7 @@ import * as tinify from 'tinify'
 import * as chalk from 'chalk'
 import { promises } from 'fs'
 import { relative, resolve } from 'path'
-import { mkdirOutput } from './utils'
+import { isFile, mkdirOutput } from './utils'
 
 /**
  * tinify 剩余次数
@@ -54,10 +54,16 @@ async function compressTinify(file: string, outPath: string = '', defaultPath: s
 
     const buffer = await source.toBuffer()
 
+    const isFileFlag = await isFile(defaultPath)
+    let relativeFile = ''
+
     // 获取图片相对路径
-    // const fileLast = file.split('/').pop()!
-    // const relativeFile = relative(defaultPath, fileLast)
-    const relativeFile = relative(defaultPath, file)
+    if (isFileFlag) {
+      relativeFile = file.split('/').pop()!
+    } else {
+       relativeFile = relative(defaultPath, file)
+    }
+
 
     // 返回压缩图片的绝对路径
     const outFile = resolve(outPath, relativeFile)
